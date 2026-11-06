@@ -1,0 +1,32 @@
+ul li {
+  float: left;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333333;
+}
+ul li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+h1 {
+   text-align: center;
+   background-color: #346d6d; 
+}
+
+h2 {
+    text-align: center;
+    padding: 20px;
+}
+div{
+        background-image: url(https://picsum.photos);
+
+}
