@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Prodotti - Shop Filips</title>
+
+    <link rel="stylesheet" href="./style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .catalogo {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 40px;
+        }
+
+        .prodotto {
+            width: 260px;
+            padding: 20px;
+            border: 1px solid #dddddd;
+            border-radius: 12px;
+            text-align: center;
+            text-decoration: none;
+            color: black;
+            background-color: white;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .prodotto:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .prodotto img {
+            width: 100%;
+            height: 180px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+
+        .prodotto h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .prezzo {
+            font-size: 16px;
+            color: #346d6d;
+            font-weight: bold;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h1>Shop Filips</h1>
+
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="pagina.html">Prodotti</a></li>
+        <li><a href="#contact">Contatti</a></li>
+    </ul>
+
+    <div>
+        <h2>I nostri prodotti</h2>
+    </div>
+
+    <div class="catalogo">
+
+        <a href="prodotto.html" class="prodotto">
+
+            <img src="img/immagine_prodotto_1.webp"
+                 alt="Nome del prodotto">
+
+            <h3>Nome del prodotto</h3>
+
+            <p class="prezzo">1000 €</p>
+
+        </a>
+
+    </div>
+
+</body>
+</html>
