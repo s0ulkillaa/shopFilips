@@ -26,7 +26,59 @@ h2 {
     text-align: center;
     padding: 20px;
 }
-div{
-        background-image: url(https://picsum.photos);
+.prodotti {
+    background-image: url("https://picsum.photos/1920");
+    height: 400px;
+    background-size: cover;       
+    background-position: center;  
+    
+    display: flex;
+    flex-direction: column;       
+    justify-content: center;      
+    align-items: center;         
+    text-align: center;          
+}
 
+
+button{
+            display: inline-block;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none; 
+            border-radius: 5px;   
+            font-family: sans-serif;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+p{
+        margin-bottom: 15px;
+
+}
+
+.container-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+}
+
+.container-grid h2 {
+    text-align: center;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.card {
+    background-color: #346d6d;
+    color: white;
+    padding: 30px;
+    text-align: center;
+    border-radius: 10px;
+    min-height: 150px;
 }
