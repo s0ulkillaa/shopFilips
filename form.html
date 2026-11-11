@@ -42,5 +42,22 @@
     </main>
 
     <iframe src="footer.html" class="site-footer" title="Piè di pagina"></iframe>
+    <script>
+        const form =document.getElementById('col-lg-8');
+        const messaggio = Document.getElementById('row g-3');
+        form.addEventListener('invia', function(event){
+            event.preventDefault;
+            const nome = document.getElementById('nome').value;
+            const email= document.getElementById('exampleInputEmail1').value;
+            const datiUser = {
+                nome: nome,
+                exampleInputEmail1 : exampleInputEmail1,
+                dataSave: new Date().toLocaleString()
+            };
+            localStorage.setItem('utenteLocale',JSON.stringify(datiUtente));
+            messaggio.textContent = "dati salvati con successo";
+            form.reset(); 
+        });
+    </script>
 </body>
 </html>
