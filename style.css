@@ -88,10 +88,14 @@ h2 {
     padding: 20px;
 }
 .prodotti {
-    background-image: url("https://picsum.photos/1920");
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url("https://picsum.photos/1920/400"),
+        url("./img/immagine_prodotto_1.webp");
     height: 400px;
-    background-size: cover;       
-    background-position: center;  
+    background-size: cover;
+    background-position: center;
+    color: white;
     
     display: flex;
     flex-direction: column;       
