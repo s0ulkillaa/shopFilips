@@ -23,6 +23,7 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
+  height: 40px;
   background-color: #333333;
 }
 .site-nav li a {
@@ -42,7 +43,7 @@ h1 {
 .site-header {
     display: block;
     width: 100%;
-    height: 140px;
+    height: 40px;
     border: 0;
 }
 
