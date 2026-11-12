@@ -152,37 +152,63 @@
 
     <!-- JAVASCRIPT: CAMBIO IMMAGINI -->
     <script>
+    // Array contenente le immagini disponibili
+    const immagini = [
+        "img/immagine_prodotto_1.webp",
+        "img/foto2.webp",
+        "img/foto3.jpeg",
+        "img/foto4.jpeg",
+        "img/foto5.jpeg",
+        "img/foto6.webp",
+        "img/foto7.jpeg",
+        "img/foto8.jpeg"
+    ];
 
-        // Array contenente le immagini disponibili
-        const immagini = [
-            "img/immagine_prodotto_1.webp",
-            "img/foto2.webp",
-            "img/foto3.jpeg",
-            "img/foto4.jpeg"
-        ];
+    // Seleziona tutte e 5 le immagini dei prodotti
+    const prodotti = document.querySelectorAll(".immagine-casuale");
 
-        // Funzione che cambia casualmente le immagini
-        function cambiaImmagini() {
+    // Array che memorizza l'indice dell'immagine attuale per ciascun prodotto
+    const ultimeImmagini = [];
 
-            // Seleziona tutte le immagini dei prodotti
-            const prodotti = document.querySelectorAll(".immagine-casuale");
+    // Funzione che cambia l'immagine di UN SOLO prodotto evitando di ripetere la sua precedente
+    function cambiaImmagineProdotto(indiceProdotto) {
+        const img = prodotti[indiceProdotto];
+        const precedente = ultimeImmagini[indiceProdotto];
 
-            // Scorre tutte le immagini
-            prodotti.forEach(function(img) {
+        let nuovoNumero = Math.floor(Math.random() * immagini.length);
 
-                // Genera un indice casuale
-                const numero = Math.floor(Math.random() * immagini.length);
-
-                // Assegna una nuova immagine
-                img.src = immagini[numero];
-
-            });
+        // Continua a sorteggiare finché esce un'immagine diversa da quella che ha già
+        while (nuovoNumero === precedente) {
+            nuovoNumero = Math.floor(Math.random() * immagini.length);
         }
 
-        // Esegue il cambio ogni 30 secondi
-        setInterval(cambiaImmagini, 30000);
+        // Aggiorna l'immagine nella pagina e salva il nuovo numero in memoria
+        img.src = immagini[nuovoNumero];
+        ultimeImmagini[indiceProdotto] = nuovoNumero;
+    }
 
-    </script>
+    // 1. AVVIO: Imposta subito un'immagine casuale per tutti e 5 i prodotti
+    prodotti.forEach(function(img, index) {
+        cambiaImmagineProdotto(index);
+    });
+
+    // 2. SEQUENZA: Ogni 5 secondi cambia un prodotto alla volta in fila
+    let prodottoAttuale = 0;
+
+    setInterval(function() {
+        // Cambia solo il prodotto di turno
+        cambiaImmagineProdotto(prodottoAttuale);
+
+        // Passa al prodotto successivo
+        prodottoAttuale++;
+
+        // Se ha superato l'ultimo prodotto (indice 4), ricomincia dal primo (indice 0)
+        if (prodottoAttuale >= prodotti.length) {
+            prodottoAttuale = 0;
+        }
+    }, 1000);
+</script>
+
 
 </body>
 </html>
