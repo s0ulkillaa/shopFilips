@@ -15,7 +15,6 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <h2>Contattaci</h2>
-
                 <form id="contatto-form">
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -30,12 +29,13 @@
                             <label for="exampleInputEmail1" class="form-label">Email</label>
                             <input type="email" class="form-control" id="exampleInputEmail1" name="email">
                         </div>
-                          <div class="col-12">
+                        <div class="col-12">
                             <label for="messaggio" class="form-label">Cosa stai cercando / informazioni</label>
                             <textarea class="form-control" id="messaggio" name="messaggio" rows="4"></textarea>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 d-flex gap-2">
                             <button type="submit" class="btn btn-primary">Invia</button>
+                            <button type="button" class="btn btn-secondary" id="autofill-button">Autofill</button>
                         </div>
                         <div class="col-12" id="stato-invio" role="status" aria-live="polite"></div>
                     </div>
@@ -49,21 +49,35 @@
         const form = document.getElementById('contatto-form');
         const statoInvio = document.getElementById('stato-invio');
         form.addEventListener('submit', function(event){
+            console.log(form);
             event.preventDefault();
             const nome = document.getElementById('nome').value;
             const cognome = document.getElementById('cognome').value;
             const email = document.getElementById('exampleInputEmail1').value;
             const messaggio = document.getElementById('messaggio').value;
             const datiUtente = {
-                nome: nome,
-                cognome: cognome,
                 email: email,
                 messaggio: messaggio,
                 dataSave: new Date().toLocaleString()
             };
             localStorage.setItem('utenteLocale', JSON.stringify(datiUtente));
+            localStorage.setItem('nome', nome);
+            localStorage.setItem('cognome', cognome);
+
             statoInvio.textContent = "Dati salvati con successo";
             form.reset();
+        });
+
+        const autofillButton = document.getElementById('autofill-button');
+        autofillButton.addEventListener('click', function() {
+            const nome = localStorage.getItem('nome');
+            const cognome = localStorage.getItem('cognome');
+            const utenteSalvato = localStorage.getItem('utenteLocale');
+
+            document.getElementById('nome').value = nome;
+            document.getElementById('cognome').value = cognome;
+            document.getElementById('exampleInputEmail1').value = datiUtente.email;
+            statoInvio.textContent = "Dati compilati";
         });
     </script>
 </body>
