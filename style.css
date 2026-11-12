@@ -14,11 +14,11 @@
   font-display: swap;
 }
 
-.site-nav li {
+ul.site-nav li {
   float: left;
 }
 
-.site-nav {
+ul.site-nav {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -26,11 +26,11 @@
   height: 40px;
   background-color: #333333;
 }
-.site-nav li a {
+ul.site-nav li a {
   display: block;
   color: white;
   text-align: center;
-  padding: 14px 16px;
+  padding: 10px 15px;
   text-decoration: none;
 }
 
@@ -41,6 +41,13 @@ h1 {
 }
 
 .site-header {
+    display: block;
+    width: 100%;
+    height: 40px;
+    border: 0;
+}
+
+iframe.site-nav {
     display: block;
     width: 100%;
     height: 40px;
@@ -71,7 +78,7 @@ body:not(.header-document) {
     margin: 0;
 }
 
-.site-nav {
+ul.site-nav {
     display: flex;
     flex-wrap: wrap;
 }
