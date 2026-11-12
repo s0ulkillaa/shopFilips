@@ -14,22 +14,23 @@
   font-display: swap;
 }
 
-.site-nav li {
+ul.site-nav li {
   float: left;
 }
 
-.site-nav {
+ul.site-nav {
   list-style-type: none;
   margin: 0;
   padding: 0;
   overflow: hidden;
+  height: 40px;
   background-color: #333333;
 }
-.site-nav li a {
+ul.site-nav li a {
   display: block;
   color: white;
   text-align: center;
-  padding: 14px 16px;
+  padding: 10px 15px;
   text-decoration: none;
 }
 
@@ -42,7 +43,14 @@ h1 {
 .site-header {
     display: block;
     width: 100%;
-    height: 140px;
+    height: 40px;
+    border: 0;
+}
+
+iframe.site-nav {
+    display: block;
+    width: 100%;
+    height: 40px;
     border: 0;
 }
 
@@ -70,7 +78,7 @@ body:not(.header-document) {
     margin: 0;
 }
 
-.site-nav {
+ul.site-nav {
     display: flex;
     flex-wrap: wrap;
 }
@@ -80,10 +88,14 @@ h2 {
     padding: 20px;
 }
 .prodotti {
-    background-image: url("https://picsum.photos/1920");
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url("https://picsum.photos/1920/400"),
+        url("./img/immagine_prodotto_1.webp");
     height: 400px;
-    background-size: cover;       
-    background-position: center;  
+    background-size: cover;
+    background-position: center;
+    color: white;
     
     display: flex;
     flex-direction: column;       
@@ -173,4 +185,17 @@ p{
     position: absolute;
     bottom: 0;
 
+}
+
+.site-header-content{
+    position: relative;
+}
+
+.header-login{
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    color: black;
+    font-size: 1.4rem;
 }

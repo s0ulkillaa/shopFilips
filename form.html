@@ -9,13 +9,13 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
     <iframe src="header.html" class="site-header" title="Intestazione e navigazione"></iframe>
+    <iframe src="nav_bar.html" class="site-nav" title="Navigazione"></iframe>
 
     <main class="container my-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <h2>Contattaci</h2>
-
-                <form>
+                <form id="contatto-form">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="nome" class="form-label">Nome</label>
@@ -25,16 +25,19 @@
                             <label for="cognome" class="form-label">Cognome</label>
                             <input type="text" class="form-control" id="cognome" name="cognome" maxlength="200">
                         </div>
-                          <div class="form-group">
-                                <label for="exampleInputEmail1">Email</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="">                            </div>
-                          <div class="col-12">
+                        <div class="col-md-6">
+                            <label for="exampleInputEmail1" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1" name="email">
+                        </div>
+                        <div class="col-12">
                             <label for="messaggio" class="form-label">Cosa stai cercando / informazioni</label>
                             <textarea class="form-control" id="messaggio" name="messaggio" rows="4"></textarea>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 d-flex gap-2">
                             <button type="submit" class="btn btn-primary">Invia</button>
+                            <button type="button" class="btn btn-secondary" id="autofill-button">Autofill</button>
                         </div>
+                        <div class="col-12" id="stato-invio" role="status" aria-live="polite"></div>
                     </div>
                 </form>
             </div>
@@ -42,5 +45,40 @@
     </main>
 
     <iframe src="footer.html" class="site-footer" title="Piè di pagina"></iframe>
+    <script>
+        const form = document.getElementById('contatto-form');
+        const statoInvio = document.getElementById('stato-invio');
+        form.addEventListener('submit', function(event){
+            console.log(form);
+            event.preventDefault();
+            const nome = document.getElementById('nome').value;
+            const cognome = document.getElementById('cognome').value;
+            const email = document.getElementById('exampleInputEmail1').value;
+            const messaggio = document.getElementById('messaggio').value;
+            const datiUtente = {
+                email: email,
+                messaggio: messaggio,
+                dataSave: new Date().toLocaleString()
+            };
+            localStorage.setItem('utenteLocale', JSON.stringify(datiUtente));
+            localStorage.setItem('nome', nome);
+            localStorage.setItem('cognome', cognome);
+
+            statoInvio.textContent = "Dati salvati con successo";
+            form.reset();
+        });
+
+        const autofillButton = document.getElementById('autofill-button');
+        autofillButton.addEventListener('click', function() {
+            const nome = localStorage.getItem('nome');
+            const cognome = localStorage.getItem('cognome');
+            const utenteSalvato = localStorage.getItem('utenteLocale');
+
+            document.getElementById('nome').value = nome;
+            document.getElementById('cognome').value = cognome;
+            document.getElementById('exampleInputEmail1').value = datiUtente.email;
+            statoInvio.textContent = "Dati compilati";
+        });
+    </script>
 </body>
 </html>
