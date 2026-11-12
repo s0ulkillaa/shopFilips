@@ -10,9 +10,20 @@
 <body class="header-document">
     <header class="site-header-content">
         <h1>Shop Filips</h1>
-        <a class="header-login" href="pagina_login.html" target="_top" aria-label="accedi">
+        <a class="header-login" id="header-login" href="pagina_login.html" target="_top" aria-label="accedi">
             <i class="bi bi-person-circle" aria-hidden="true"></i>
         </a>
     </header>
+    <script src="auth.js"></script>
+    <script>
+        // Con il login attivo l'icona diventa "Esci" e chiude la sessione
+        if (utenteCorrente()) {
+            const link = document.getElementById('header-login');
+            link.setAttribute('aria-label', 'esci');
+            link.title = 'Esci';
+            link.querySelector('i').className = 'bi bi-box-arrow-right';
+            link.addEventListener('click', esci);
+        }
+    </script>
 </body>
 </html>

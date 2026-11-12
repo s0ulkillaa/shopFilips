@@ -41,3 +41,34 @@ function mostraMessaggio(elemento, testo, tipo) {
     elemento.textContent = testo;
     elemento.className = 'mt-3 text-center text-' + (tipo === 'ok' ? 'success' : 'danger');
 }
+
+const PAGINA_LOGIN = 'pagina_login.html';
+const PAGINA_HOME = 'index.html';
+let paginaRiservata = false;
+
+function utenteCorrente() {
+    try {
+        return JSON.parse(localStorage.getItem(CHIAVE_SESSIONE));
+    } catch (e) {
+        return null;
+    }
+}
+
+// Da chiamare nell'<head> delle pagine riservate: senza login rimanda alla pagina di login.
+// Il controllo è solo lato browser: protegge la navigazione, non i dati.
+function richiediLogin() {
+    paginaRiservata = true;
+    if (!utenteCorrente()) {
+        document.documentElement.style.visibility = 'hidden';
+        window.location.replace(PAGINA_LOGIN);
+    }
+}
+
+function esci() {
+    localStorage.removeItem(CHIAVE_SESSIONE);
+}
+
+// Con il tasto "indietro" dopo l'uscita il browser può mostrare la pagina dalla cache: ricontrolla
+window.addEventListener('pageshow', function (e) {
+    if (e.persisted && paginaRiservata) richiediLogin();
+});

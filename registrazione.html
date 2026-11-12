@@ -10,7 +10,6 @@
 </head>
 <body>
     <iframe src="header.html" class="site-header" title="Intestazione"></iframe>
-    <iframe src="nav_bar.html" class="site-nav" title="Navigazione"></iframe>
 
     <main class="container my-5">
         <div class="row justify-content-center">
@@ -40,7 +39,7 @@
                         </div>
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Registrati</button>
-                            <a href="login.html" class="btn btn-link">Hai già un account? Accedi</a>
+                            <a href="pagina_login.html" class="btn btn-link">Hai già un account? Accedi</a>
                         </div>
                     </div>
                     <div id="messaggio" class="mt-3 text-center" role="status"></div>
@@ -95,7 +94,7 @@
 
                 form.reset();
                 mostraMessaggio(messaggio, 'Registrazione completata. Ti porto al login...', 'ok');
-                setTimeout(function () { window.location.href = 'login.html'; }, 1500);
+                setTimeout(function () { window.location.href = PAGINA_LOGIN; }, 1500);
             } catch (e) {
                 mostraMessaggio(messaggio, 'Impossibile completare la registrazione.', 'errore');
             }

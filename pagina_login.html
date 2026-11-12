@@ -11,7 +11,6 @@
 </head>
 <body>
     <iframe src="header.html" class="site-header" title="Intestazione"></iframe>
-    <iframe src="nav_bar.html" class="site-nav" title="Navigazione"></iframe>
 
     <div class="container my-4">
         <div class="row justify-content-center">
@@ -40,26 +39,40 @@
 
     <iframe src="footer.html" class="site-footer" title="Piè di pagina"></iframe>
 
+    <script src="auth.js"></script>
     <script>
-        // Gestisce il submit del login e salva l'email nel localStorage
+        // Se hai già fatto l'accesso vai direttamente alla home
+        if (utenteCorrente()) {
+            window.location.replace(PAGINA_HOME);
+        }
+
         const form = document.getElementById('login-form');
         const messaggio = document.getElementById('messaggio');
 
-        form.addEventListener('submit', function (event) {
+        form.addEventListener('submit', async function (event) {
             event.preventDefault();
-            const email = document.getElementById('email').value.trim();
+
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const password = document.getElementById('password').value;
 
             try {
-                localStorage.setItem('utenteLocale', JSON.stringify({
-                    email: email,
-                    dataSave: new Date().toLocaleString()
+                const utente = leggiUtenti().find(u => u.email === email);
+                const hash = utente ? await calcolaHash(password, utente.salt) : null;
+
+                // Stesso messaggio per email sconosciuta e password errata
+                if (!utente || hash !== utente.hash) {
+                    mostraMessaggio(messaggio, 'Email o password non corretti.', 'errore');
+                    return;
+                }
+
+                localStorage.setItem(CHIAVE_SESSIONE, JSON.stringify({
+                    nome: utente.nome,
+                    cognome: utente.cognome,
+                    email: utente.email
                 }));
-                messaggio.textContent = 'Dati salvati con successo';
-                messaggio.className = 'mt-3 text-center text-success';
-                form.reset();
+                window.location.href = PAGINA_HOME;
             } catch (e) {
-                messaggio.textContent = 'Impossibile salvare i dati';
-                messaggio.className = 'mt-3 text-center text-danger';
+                mostraMessaggio(messaggio, 'Impossibile effettuare l\'accesso.', 'errore');
             }
         });
     </script>
