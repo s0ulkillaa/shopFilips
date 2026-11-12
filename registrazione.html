@@ -75,6 +75,7 @@
 
             try {
                 const utenti = leggiUtenti();
+
                 if (utenti.some(u => u.email === email)) {
                     mostraMessaggio(messaggio, 'Esiste già un account con questa email.', 'errore');
                     return;
@@ -92,9 +93,12 @@
                 });
                 salvaUtenti(utenti);
 
+                // Scarica credenziali.txt con tutti gli utenti registrati
+                scaricaCredenziali();
+
                 form.reset();
-                mostraMessaggio(messaggio, 'Registrazione completata. Ti porto al login...', 'ok');
-                setTimeout(function () { window.location.href = PAGINA_LOGIN; }, 1500);
+                mostraMessaggio(messaggio, 'Registrazione completata. Ho scaricato il file ' + NOME_FILE_CREDENZIALI + '. Ti porto al login...', 'ok');
+                setTimeout(function () { window.location.href = PAGINA_LOGIN; }, 2000);
             } catch (e) {
                 mostraMessaggio(messaggio, 'Impossibile completare la registrazione.', 'errore');
             }

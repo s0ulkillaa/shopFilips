@@ -4,6 +4,7 @@
 
 const CHIAVE_UTENTI = 'utenti';
 const CHIAVE_SESSIONE = 'utenteCorrente';
+const NOME_FILE_CREDENZIALI = 'credenziali.txt';
 
 function leggiUtenti() {
     try {
@@ -35,6 +36,33 @@ async function calcolaHash(password, salt) {
         256
     );
     return aHex(bit);
+}
+
+function campoTesto(valore) {
+    // ";" e a capo sono i separatori del file: li sostituisco con uno spazio
+    return String(valore).replace(/[;\r\n]+/g, ' ');
+}
+
+// Un sito statico non può scrivere file sul disco in silenzio: genera credenziali.txt
+// con tutti gli utenti registrati e lo fa scaricare dal browser (cartella Download).
+function scaricaCredenziali() {
+    const righe = [
+        '# Credenziali Shop Filips',
+        '# formato: nome;cognome;email;salt;hash (PBKDF2-SHA256, 100000 iterazioni)'
+    ];
+    leggiUtenti().forEach(function (u) {
+        righe.push([u.nome, u.cognome, u.email, u.salt, u.hash].map(campoTesto).join(';'));
+    });
+
+    const blob = new Blob([righe.join('\r\n') + '\r\n'], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = NOME_FILE_CREDENZIALI;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
 }
 
 function mostraMessaggio(elemento, testo, tipo) {
