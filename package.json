@@ -1,0 +1,17 @@
+{
+  "name": "shopfilips",
+  "version": "1.0.0",
+  "description": "Shop Filips with PostgreSQL-backed authentication",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "pg": "^8.13.0"
+  }
+}

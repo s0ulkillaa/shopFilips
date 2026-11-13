@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: shopfilips-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: shopfilips
+      POSTGRES_USER: filips
+      POSTGRES_PASSWORD: filips
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+volumes:
+  postgres_data:

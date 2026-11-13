@@ -52,19 +52,23 @@
             const password = document.getElementById('password').value;
 
             try {
-                const utente = leggiUtenti().find(u => u.email === email);
-                const hash = utente ? await calcolaHash(password, utente.salt) : null;
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
 
-                // Stesso messaggio per email sconosciuta e password errata
-                if (!utente || hash !== utente.hash) {
-                    mostraMessaggio(messaggio, 'Email o password non corretti.', 'errore');
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) {
+                    mostraMessaggio(messaggio, data.message || 'Email o password non corretti.', 'errore');
                     return;
                 }
 
-                localStorage.setItem(CHIAVE_SESSIONE, JSON.stringify({
-                    nome: utente.nome,
-                    cognome: utente.cognome,
-                    email: utente.email
+                localStorage.setItem('utenteCorrente', JSON.stringify({
+                    nome: data.user.nome,
+                    cognome: data.user.cognome,
+                    email: data.user.email
                 }));
                 window.location.href = 'index.html';
             } catch (e) {

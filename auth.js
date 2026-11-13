@@ -1,6 +1,5 @@
-// Funzioni condivise da registrazione.html e login.html
-// Gli utenti sono salvati nel localStorage del browser: va bene per un sito statico
-// di prova, non sostituisce un'autenticazione lato server.
+// Funzioni condivise da registrazione.html e login.html.
+// Le operazioni di autenticazione sono ora gestite dal backend con PostgreSQL.
 
 const CHIAVE_UTENTI = 'utenti';
 const CHIAVE_SESSIONE = 'utenteCorrente';

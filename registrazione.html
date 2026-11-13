@@ -75,23 +75,18 @@
             }
 
             try {
-                const utenti = leggiUtenti();
-                if (utenti.some(u => u.email === email)) {
-                    mostraMessaggio(messaggio, 'Esiste già un account con questa email.', 'errore');
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, cognome, email, password })
+                });
+
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) {
+                    mostraMessaggio(messaggio, data.message || 'Impossibile completare la registrazione.', 'errore');
                     return;
                 }
-
-                const salt = generaSalt();
-                const hash = await calcolaHash(password, salt);
-                utenti.push({
-                    nome: nome,
-                    cognome: cognome,
-                    email: email,
-                    salt: salt,
-                    hash: hash,
-                    dataRegistrazione: new Date().toISOString()
-                });
-                salvaUtenti(utenti);
 
                 form.reset();
                 mostraMessaggio(messaggio, 'Registrazione completata. Ti porto al login...', 'ok');

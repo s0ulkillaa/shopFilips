@@ -38,33 +38,45 @@
         </div>
     </div>
     <iframe src="footer.html" class="site-footer" title="Piè di pagina"></iframe>
+    <script src="auth.js"></script>
     <script>
-        // Gestisce il submit del login e salva l'email nel localStorage
         const form = document.getElementById('login-form');
         const messaggio = document.getElementById('messaggio');
 
-        form.addEventListener('submit', function (event) {
+        form.addEventListener('submit', async function (event) {
             event.preventDefault();
-            const email = document.getElementById('email').value.trim();
+
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const password = document.getElementById('password').value;
 
             try {
-                localStorage.setItem('utenteLocale', JSON.stringify({
-                    email: email,
-                    dataSave: new Date().toLocaleString()
-                }));
-                const normalizedEmail = email.toLowerCase();
-                sessionStorage.setItem('utenteLoggato', normalizedEmail);
-            } catch (error) {
-                messaggio.textContent = 'Impossibile salvare i dati';
-                messaggio.className = 'mt-3 text-center text-danger';
-                return;
-            }
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
 
-            const redirect = new URLSearchParams(window.location.search).get('redirect');
-            const destinazione = ['preventivi.html', 'pagina_prodotto_1.html'].includes(redirect)
-                ? redirect
-                : 'index.html';
-            window.location.assign(destinazione);
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) {
+                    mostraMessaggio(messaggio, data.message || 'Email o password non corretti.', 'errore');
+                    return;
+                }
+
+                localStorage.setItem('utenteCorrente', JSON.stringify({
+                    nome: data.user.nome,
+                    cognome: data.user.cognome,
+                    email: data.user.email
+                }));
+
+                const redirect = new URLSearchParams(window.location.search).get('redirect');
+                const destinazione = ['preventivi.html', 'pagina_prodotto_1.html'].includes(redirect)
+                    ? redirect
+                    : 'index.html';
+                window.location.assign(destinazione);
+            } catch (error) {
+                mostraMessaggio(messaggio, 'Impossibile effettuare l\'accesso.', 'errore');
+            }
         });
     </script>
 </body>
