@@ -31,6 +31,9 @@
                         <button type="submit" class="btn btn-primary">Accedi</button>
                         <a href="registrazione.html" class="btn btn-outline-primary">Registrati</a>
                     </div>
+                    <div class="text-center mt-2">
+                        <button type="button" id="ripristina-file" class="btn btn-link" hidden>Ripristina gli utenti da credenziali.txt</button>
+                    </div>
                     <div id="messaggio" class="mt-3 text-center" role="status"></div>
                 </form>
             </div>
@@ -56,7 +59,22 @@
             const password = document.getElementById('password').value;
 
             try {
-                const utente = leggiUtenti().find(u => u.email === email);
+                let utente = leggiUtenti().find(u => u.email === email);
+
+                // Utente non presente nel browser (ad esempio eliminato dal localStorage):
+                // lo cerco nel file credenziali.txt e lo ripristino
+                if (!utente) {
+                    try {
+                        const handle = await ottieniFile(false, false);
+                        if (handle) {
+                            await sincronizzaConFile(handle, false);
+                            utente = leggiUtenti().find(u => u.email === email);
+                        }
+                    } catch (e) {
+                        // file non leggibile: si prosegue solo con i dati del browser
+                    }
+                }
+
                 const hash = utente ? await calcolaHash(password, utente.salt) : null;
 
                 // Stesso messaggio per email sconosciuta e password errata
@@ -73,6 +91,24 @@
                 window.location.href = PAGINA_HOME;
             } catch (e) {
                 mostraMessaggio(messaggio, 'Impossibile effettuare l\'accesso.', 'errore');
+            }
+        });
+
+        // Collega un credenziali.txt già esistente e riporta nel browser gli utenti che contiene
+        const bottoneFile = document.getElementById('ripristina-file');
+        if (fileSupportato()) bottoneFile.hidden = false;
+        bottoneFile.addEventListener('click', async function () {
+            const handle = await collegaFileEsistente();
+            if (!handle) {
+                mostraMessaggio(messaggio, 'Nessun file selezionato.', 'errore');
+                return;
+            }
+            try {
+                const utenti = await sincronizzaConFile(handle, false);
+                mostraMessaggio(messaggio, 'Utenti ripristinati dal file: ' + utenti.length + '.', 'ok');
+            } catch (e) {
+                const nonValido = e.message === 'FILE_NON_VALIDO';
+                mostraMessaggio(messaggio, nonValido ? 'Il file non contiene un elenco di utenti valido.' : 'Impossibile leggere il file.', 'errore');
             }
         });
     </script>

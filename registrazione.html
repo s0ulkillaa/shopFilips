@@ -74,8 +74,23 @@
             }
 
             try {
-                const utenti = leggiUtenti();
+                // Il file va scelto subito, mentre il click è ancora "fresco" (lo richiede il browser)
+                let handle = null;
+                try {
+                    handle = await ottieniFile(true, true);
+                    // Riporta nel browser gli utenti già nel file, anche quelli eliminati dal localStorage
+                    if (handle) await sincronizzaConFile(handle, false);
+                } catch (e) {
+                    if (e.message === 'FILE_NON_VALIDO') {
+                        await scollegaFile();
+                        mostraMessaggio(messaggio, 'Il file ' + NOME_FILE_CREDENZIALI + ' non contiene un elenco di utenti valido e non lo sovrascrivo. Correggilo oppure riprova per sceglierne un altro.', 'errore');
+                        return;
+                    }
+                    if (e.name === 'NotFoundError') await scollegaFile();
+                    handle = null;
+                }
 
+                const utenti = leggiUtenti();
                 if (utenti.some(u => u.email === email)) {
                     mostraMessaggio(messaggio, 'Esiste già un account con questa email.', 'errore');
                     return;
@@ -93,12 +108,23 @@
                 });
                 salvaUtenti(utenti);
 
-                // Scarica credenziali.txt con tutti gli utenti registrati
-                scaricaCredenziali();
+                // Riscrive lo stesso file credenziali.txt con l'elenco aggiornato
+                let salvatoSuFile = false;
+                if (handle) {
+                    try {
+                        await sincronizzaConFile(handle, true);
+                        salvatoSuFile = true;
+                    } catch (e) { /* si avvisa sotto */ }
+                }
 
                 form.reset();
-                mostraMessaggio(messaggio, 'Registrazione completata. Ho scaricato il file ' + NOME_FILE_CREDENZIALI + '. Ti porto al login...', 'ok');
-                setTimeout(function () { window.location.href = PAGINA_LOGIN; }, 2000);
+                if (salvatoSuFile) {
+                    mostraMessaggio(messaggio, 'Registrazione completata e salvata in ' + NOME_FILE_CREDENZIALI + '. Ti porto al login...', 'ok');
+                    setTimeout(function () { window.location.href = PAGINA_LOGIN; }, 2000);
+                } else {
+                    mostraMessaggio(messaggio, 'Registrazione completata, ma non sono riuscito a salvarla in ' + NOME_FILE_CREDENZIALI + ' (serve Chrome o Edge e la scelta del file). Ti porto al login...', 'ok');
+                    setTimeout(function () { window.location.href = PAGINA_LOGIN; }, 4000);
+                }
             } catch (e) {
                 mostraMessaggio(messaggio, 'Impossibile completare la registrazione.', 'errore');
             }
