@@ -404,3 +404,55 @@ p{
         align-items: flex-start;
     }
 }
+
+@page preventivo {
+    margin: 20mm;
+}
+
+@media print {
+    .preventivo {
+        page: preventivo;
+    }
+
+    body > iframe,
+    .preventivo-intestazione,
+    .preventivo-grid,
+    .preventivo-totale,
+    .preventivo-azioni {
+        display: none !important;
+    }
+
+    .preventivo {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .preventivo-shell {
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: #fff !important;
+        box-shadow: none !important;
+    }
+
+    .preventivo-riepilogo {
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: #fff !important;
+    }
+
+    .preventivo-riepilogo h2,
+    .preventivo-riepilogo-totale,
+    #riepilogo .list-group-item,
+    #riepilogo .list-group-item strong {
+        color: #000 !important;
+    }
+
+    #riepilogo {
+        overflow: visible;
+    }
+}
