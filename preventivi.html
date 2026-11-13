@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>I miei preventivi - Shop Filips</title>
+    <link rel="icon" type="image/png" href="./img/filips.png">
+    <link rel="stylesheet" href="./style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .preventivo-card {
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 1.25rem;
+            background: #fff;
+        }
+
+        .preventivo-card h2 {
+            text-align: left;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <iframe src="header.html" class="site-header" title="Intestazione"></iframe>
+    <iframe src="nav_bar.html" class="site-nav" title="Navigazione"></iframe>
+
+    <main class="container my-5">
+        <h1 class="mb-4">I miei preventivi</h1>
+        <div id="elenco-preventivi" class="d-grid gap-3" aria-live="polite"></div>
+    </main>
+
+    <iframe src="footer.html" class="site-footer" title="Piè di pagina"></iframe>
+    <script>
+        const utenteLoggato = sessionStorage.getItem('utenteLoggato');
+
+        if (!utenteLoggato) {
+            window.location.replace('pagina_login.html?redirect=preventivi.html');
+        } else {
+            const elencoPreventivi = document.getElementById('elenco-preventivi');
+
+            try {
+                const preventiviSalvati = JSON.parse(localStorage.getItem('preventivi') || '[]');
+                if (!Array.isArray(preventiviSalvati)) {
+                    throw new Error('Il contenuto salvato non è un elenco.');
+                }
+
+                const preventiviUtente = preventiviSalvati.filter(function(preventivo) {
+                    return preventivo &&
+                        typeof preventivo.email === 'string' &&
+                        preventivo.email.trim().toLowerCase() === utenteLoggato;
+                });
+
+                if (preventiviUtente.length === 0) {
+                    const messaggioVuoto = document.createElement('p');
+                    messaggioVuoto.className = 'alert alert-info';
+                    messaggioVuoto.textContent = 'Non hai ancora creato nessun preventivo.';
+                    elencoPreventivi.append(messaggioVuoto);
+                } else {
+                    preventiviUtente.forEach(function(preventivo) {
+                        const scheda = document.createElement('article');
+                        scheda.className = 'preventivo-card shadow-sm';
+
+                        const titolo = document.createElement('h2');
+                        titolo.className = 'h5';
+                        titolo.textContent = preventivo.titolo || preventivo.prodotto || 'Preventivo';
+                        scheda.append(titolo);
+
+                        if (preventivo.data) {
+                            const data = document.createElement('p');
+                            data.className = 'mb-1';
+                            data.textContent = 'Data: ' + preventivo.data;
+                            scheda.append(data);
+                        }
+
+                        if (preventivo.prezzo !== undefined) {
+                            const prezzo = document.createElement('p');
+                            prezzo.className = 'mb-0';
+                            prezzo.textContent = 'Prezzo: ' + preventivo.prezzo;
+                            scheda.append(prezzo);
+                        }
+
+                        elencoPreventivi.append(scheda);
+                    });
+                }
+            } catch (error) {
+                const messaggioErrore = document.createElement('p');
+                messaggioErrore.className = 'alert alert-danger';
+                messaggioErrore.textContent = 'Non è stato possibile leggere i preventivi salvati.';
+                elencoPreventivi.append(messaggioErrore);
+                console.error('Errore durante il caricamento dei preventivi:', error);
+            }
+        }
+    </script>
+</body>
+</html>
