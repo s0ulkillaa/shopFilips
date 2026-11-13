@@ -37,9 +37,7 @@
             </div>
         </div>
     </div>
-
     <iframe src="footer.html" class="site-footer" title="Piè di pagina"></iframe>
-
     <script>
         // Gestisce il submit del login e salva l'email nel localStorage
         const form = document.getElementById('login-form');
@@ -54,13 +52,19 @@
                     email: email,
                     dataSave: new Date().toLocaleString()
                 }));
-                messaggio.textContent = 'Dati salvati con successo';
-                messaggio.className = 'mt-3 text-center text-success';
-                form.reset();
-            } catch (e) {
+                const normalizedEmail = email.toLowerCase();
+                sessionStorage.setItem('utenteLoggato', normalizedEmail);
+            } catch (error) {
                 messaggio.textContent = 'Impossibile salvare i dati';
                 messaggio.className = 'mt-3 text-center text-danger';
+                return;
             }
+
+            const redirect = new URLSearchParams(window.location.search).get('redirect');
+            const destinazione = ['preventivi.html', 'pagina_prodotto_1.html'].includes(redirect)
+                ? redirect
+                : 'index.html';
+            window.location.assign(destinazione);
         });
     </script>
 </body>

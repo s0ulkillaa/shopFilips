@@ -99,6 +99,16 @@
     .btn-buy-now:hover {
       background-color: #fa8900;
     }
+
+    .btn-quote {
+      background-color: #7659fc;
+      color: #fff;
+    }
+
+    .btn-quote:hover {
+      background-color: #6042e8;
+      color: #fff;
+    }
   </style>
 </head>
 <body>
@@ -121,10 +131,40 @@
       <img src="img/immagine_metodi_pagamento.png" alt="Metodi di pagamento" class="payment-image">
       <button class="btn btn-add-to-cart">Aggiungi al carrello</button>
       <button class="btn btn-buy-now">Acquista ora</button>
+      <button class="btn btn-quote" id="crea-preventivo" type="button">Richiedi preventivo</button>
     </div>
 
   </div>
     <iframe src="footer.html" class="site-footer" title="Piè di pagina"></iframe>
+    <script>
+      document.getElementById('crea-preventivo').addEventListener('click', function() {
+        const utenteLoggato = sessionStorage.getItem('utenteLoggato');
+        if (!utenteLoggato) {
+          window.location.assign('pagina_login.html?redirect=pagina_prodotto_1.html');
+          return;
+        }
+
+        try {
+          const preventivi = JSON.parse(localStorage.getItem('preventivi') || '[]');
+          if (!Array.isArray(preventivi)) {
+            throw new Error('Il contenuto salvato non è un elenco.');
+          }
+
+          preventivi.push({
+            email: utenteLoggato,
+            titolo: document.querySelector('.product-info h3').textContent.trim(),
+            prodotto: document.querySelector('.product-info h3').textContent.trim(),
+            prezzo: document.querySelector('.buy-box .price').textContent.trim(),
+            data: new Date().toLocaleDateString('it-IT')
+          });
+          localStorage.setItem('preventivi', JSON.stringify(preventivi));
+          window.location.assign('preventivi.html');
+        } catch (error) {
+          window.alert('Non è stato possibile salvare il preventivo in questo browser.');
+          console.error('Errore durante il salvataggio del preventivo:', error);
+        }
+      });
+    </script>
 
 </body>
 </html>
