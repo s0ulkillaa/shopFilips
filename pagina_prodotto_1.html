@@ -2,8 +2,10 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
+  <script src="auth.js"></script>
+  <script>richiediLogin('pagina_prodotto_1.html');</script>
   <title>Shop Filips</title>
-  
+
   <link rel="icon" type="image/png" href="./img/filips.png">
   <link rel="stylesheet" href="./style.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -117,7 +119,7 @@
   <iframe src="nav_bar.html" class="site-nav" title="Navigazione"></iframe>
 
   <div class="product-page">
-    
+
     <div class="product-left">
       <img src="img/immagine_prodotto_1.webp" alt="Case PC Gaming" class="product-image">
       <div class="product-info">
@@ -126,7 +128,7 @@
       </div>
     </div>
 
-    <div class="buy-box">   
+    <div class="buy-box">
       <div class="price">2999.99€</div>
       <img src="img/immagine_metodi_pagamento.png" alt="Metodi di pagamento" class="payment-image">
       <button class="btn btn-add-to-cart">Aggiungi al carrello</button>
@@ -135,36 +137,38 @@
     </div>
 
   </div>
-    <iframe src="footer.html" class="site-footer" title="Piè di pagina"></iframe>
-    <script>
-      document.getElementById('crea-preventivo').addEventListener('click', function() {
-        const utenteLoggato = sessionStorage.getItem('utenteLoggato');
-        if (!utenteLoggato) {
-          window.location.assign('pagina_login.html?redirect=pagina_prodotto_1.html');
-          return;
+  <iframe src="footer.html" class="site-footer" title="Piè di pagina"></iframe>
+
+  <script>
+    document.getElementById('crea-preventivo').addEventListener('click', function() {
+      const utente = utenteCorrente();
+      if (!utente || !utente.email) {
+        richiediLogin('pagina_prodotto_1.html');
+        return;
+      }
+
+      try {
+        const preventivi = JSON.parse(localStorage.getItem('preventivi') || '[]');
+        if (!Array.isArray(preventivi)) {
+          throw new Error('Il contenuto salvato non è un elenco.');
         }
 
-        try {
-          const preventivi = JSON.parse(localStorage.getItem('preventivi') || '[]');
-          if (!Array.isArray(preventivi)) {
-            throw new Error('Il contenuto salvato non è un elenco.');
-          }
-
-          preventivi.push({
-            email: utenteLoggato,
-            titolo: document.querySelector('.product-info h3').textContent.trim(),
-            prodotto: document.querySelector('.product-info h3').textContent.trim(),
-            prezzo: document.querySelector('.buy-box .price').textContent.trim(),
-            data: new Date().toLocaleDateString('it-IT')
-          });
-          localStorage.setItem('preventivi', JSON.stringify(preventivi));
-          window.location.assign('preventivi.html');
-        } catch (error) {
-          window.alert('Non è stato possibile salvare il preventivo in questo browser.');
-          console.error('Errore durante il salvataggio del preventivo:', error);
-        }
-      });
-    </script>
+        const prodotto = document.querySelector('.product-info h3').textContent.trim();
+        preventivi.push({
+          email: utente.email,
+          titolo: prodotto,
+          prodotto: prodotto,
+          prezzo: document.querySelector('.buy-box .price').textContent.trim(),
+          data: new Date().toLocaleDateString('it-IT')
+        });
+        localStorage.setItem('preventivi', JSON.stringify(preventivi));
+        window.location.assign('preventivi.html');
+      } catch (error) {
+        window.alert('Non è stato possibile salvare il preventivo in questo browser.');
+        console.error('Errore durante il salvataggio del preventivo:', error);
+      }
+    });
+  </script>
 
 </body>
 </html>

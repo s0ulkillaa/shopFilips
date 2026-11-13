@@ -3,63 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login - Shop Filips</title>
-    <link rel="icon" type="image/png" href="./img/filips.png">
-    <link rel="stylesheet" href="./style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./style.css">
-    <style>
-    </style>
+    <meta http-equiv="refresh" content="0;url=login.html">
+    <title>Accesso - Shop Filips</title>
+    <script>
+        window.location.replace('login.html' + window.location.search + window.location.hash);
+    </script>
 </head>
 <body>
-    <iframe src="header.html" class="site-header" title="Intestazione"></iframe>
-    <iframe src="nav_bar.html" class="site-nav" title="Navigazione"></iframe>
-
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <h2 class="text-center mb-4">Login</h2>
-                <form id="login-form">
-                    <p class="text-muted">Accesso dimostrativo: non è collegato a un sistema di autenticazione reale.</p>
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" class="form-control" id="email" placeholder="Inserisci la tua email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password:</label>
-                        <input type="password" class="form-control" id="password" placeholder="Inserisci la tua password" required>
-                    </div>
-                    <br>    
-                    <button type="submit" class="btn btn-primary btn-block">Accedi</button>
-                    <button type="button" class="btn btn-primary btn-blocks" onclick="window.location.href='pagina_registrazione.html'">Registrati</button>
-                    <p id="login-error" class="text-danger mt-3" role="alert" hidden></p>
-                </form>
-            </div>
-        </div>
-    </div>
-    <script>
-        const loginForm = document.getElementById('login-form');
-        const loginError = document.getElementById('login-error');
-
-        loginForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            loginError.hidden = true;
-
-            try {
-                sessionStorage.setItem('utenteLoggato', document.getElementById('email').value.trim().toLowerCase());
-            } catch (error) {
-                loginError.textContent = 'Impossibile salvare la sessione di accesso in questo browser.';
-                loginError.hidden = false;
-                return;
-            }
-
-            const redirect = new URLSearchParams(window.location.search).get('redirect');
-            const destinazione = ['preventivi.html', 'pagina_prodotto_1.html'].includes(redirect)
-                ? redirect
-                : 'index.html';
-            window.location.assign(destinazione);
-        });
-    </script>
+    <p>Reindirizzamento alla pagina di <a href="login.html">accesso</a>…</p>
 </body>
 </html>
