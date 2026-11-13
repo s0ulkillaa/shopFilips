@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Preventivo - Shop Filips</title>
+    <link rel="icon" type="image/png" href="./img/filips.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <iframe src="header.html" class="site-header" title="Intestazione"></iframe>
+    <iframe src="nav_bar.html" class="site-nav" title="Navigazione"></iframe>
+
+    <main class="preventivo container my-5">
+        <section class="preventivo-shell">
+            <header class="preventivo-intestazione">
+                <span class="preventivo-kicker">Configuratore PC</span>
+                <h1>Crea il tuo PC</h1>
+                <p class="preventivo-intro">Seleziona i componenti per calcolare il prezzo della tua configurazione.</p>
+            </header>
+
+            <div class="preventivo-grid">
+                <div class="preventivo-campo">
+                    <label for="schedaMadre">Scheda madre</label>
+                    <select id="schedaMadre" class="componente form-select">
+                        <option value="0">Seleziona una scheda madre</option>
+                        <option value="11999" data-nome="Scheda madre base">Scheda madre base - 119,99 €</option>
+                        <option value="21999" data-nome="Scheda madre avanzata">Scheda madre avanzata - 219,99 €</option>
+                    </select>
+                </div>
+
+                <div class="preventivo-campo">
+                    <label for="cpu">Processore (CPU)</label>
+                    <select class="componente form-select" id="cpu">
+                        <option value="0">Seleziona una CPU</option>
+                        <option value="18999" data-nome="AMD Ryzen 5">AMD Ryzen 5 - 189,99 €</option>
+                        <option value="32999" data-nome="Intel Core i7">Intel Core i7 - 329,99 €</option>
+                    </select>
+                </div>
+
+                <div class="preventivo-campo">
+                    <label for="gpu">Scheda video (GPU)</label>
+                    <select class="componente form-select" id="gpu">
+                        <option value="0">Seleziona una GPU</option>
+                        <option value="27999" data-nome="Scheda video base">Scheda video base - 279,99 €</option>
+                        <option value="59999" data-nome="Scheda video gaming">Scheda video gaming - 599,99 €</option>
+                    </select>
+                </div>
+
+                <div class="preventivo-campo">
+                    <label for="ram">Memoria RAM</label>
+                    <select class="componente form-select" id="ram">
+                        <option value="0">Seleziona la RAM</option>
+                        <option value="11999" data-nome="16 GB">16 GB - 119,99 €</option>
+                        <option value="21999" data-nome="32 GB">32 GB - 219,99 €</option>
+                    </select>
+                </div>
+
+                <div class="preventivo-campo">
+                    <label for="ssd">Archiviazione SSD</label>
+                    <select class="componente form-select" id="ssd">
+                        <option value="0">Seleziona un SSD</option>
+                        <option value="5999" data-nome="SSD 500 GB">SSD 500 GB - 59,99 €</option>
+                        <option value="8999" data-nome="SSD 1 TB">SSD 1 TB - 89,99 €</option>
+                    </select>
+                </div>
+
+                <div class="preventivo-campo">
+                    <label for="alimentatore">Alimentatore</label>
+                    <select class="componente form-select" id="alimentatore">
+                        <option value="0">Seleziona un alimentatore</option>
+                        <option value="6999" data-nome="650 W">650 W - 69,99 €</option>
+                        <option value="10999" data-nome="850 W">850 W - 109,99 €</option>
+                    </select>
+                </div>
+
+                <div class="preventivo-campo">
+                    <label for="case">Case</label>
+                    <select class="componente form-select" id="case">
+                        <option value="0">Seleziona un case</option>
+                        <option value="5999" data-nome="Case base">Case base - 59,99 €</option>
+                        <option value="11999" data-nome="Case RGB">Case RGB - 119,99 €</option>
+                    </select>
+                </div>
+
+                <div class="preventivo-campo">
+                    <label for="raffreddamento">Raffreddamento</label>
+                    <select class="componente form-select" id="raffreddamento">
+                        <option value="0">Seleziona il raffreddamento</option>
+                        <option value="2999" data-nome="Ad aria">Ad aria - 29,99 €</option>
+                        <option value="8999" data-nome="A liquido">A liquido - 89,99 €</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="preventivo-totale" aria-live="polite">
+                <span>Totale preventivo</span>
+                <strong id="totale">0,00 €</strong>
+            </div>
+
+            <div class="preventivo-azioni">
+                <button type="button" class="btn btn-primary" id="salva-preventivo">Salva preventivo</button>
+                <button type="button" class="btn btn-primary" id="pdf">Scarica PDF</button>
+            </div>
+
+            <section class="preventivo-riepilogo">
+                <h2>Riepilogo preventivo</h2>
+                <ul id="riepilogo" class="list-group" aria-live="polite"></ul>
+                <p class="preventivo-riepilogo-totale">Totale: <strong id="riepilogo-totale">0,00 €</strong></p>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        const menuComponenti = document.querySelectorAll(".componente");
+        const campoTotale = document.getElementById("totale");
+        const riepilogo = document.getElementById("riepilogo");
+        const campoTotaleRiepilogo = document.getElementById("riepilogo-totale");
+
+        function formattaEuro(valore) {
+            return new Intl.NumberFormat("it-IT", {
+                style: "currency",
+                currency: "EUR"
+            }).format(valore / 100);
+        }
+
+        function aggiornaTotale() {
+            let totaleInCentesimi = 0;
+            const elementiRiepilogo = [];
+
+            menuComponenti.forEach((menu) => {
+                const valore = Number(menu.value) || 0;
+                totaleInCentesimi += valore;
+
+                if (valore > 0) {
+                    const nome = menu.selectedOptions[0]?.dataset?.nome || menu.selectedOptions[0]?.textContent || "Componente";
+                    elementiRiepilogo.push({ nome, prezzo: valore });
+                }
+            });
+
+            campoTotale.textContent = formattaEuro(totaleInCentesimi);
+            campoTotaleRiepilogo.textContent = formattaEuro(totaleInCentesimi);
+
+            riepilogo.innerHTML = "";
+
+            if (elementiRiepilogo.length === 0) {
+                const vuoto = document.createElement("li");
+                vuoto.className = "list-group-item empty-state";
+                vuoto.textContent = "Nessun componente selezionato. Inizia a scegliere i dettagli del tuo PC.";
+                riepilogo.appendChild(vuoto);
+                return;
+            }
+
+            elementiRiepilogo.forEach((elemento) => {
+                const item = document.createElement("li");
+                item.className = "list-group-item d-flex justify-content-between align-items-center";
+                item.innerHTML = `<span>${elemento.nome}</span><strong>${formattaEuro(elemento.prezzo)}</strong>`;
+                riepilogo.appendChild(item);
+            });
+        }
+
+        menuComponenti.forEach((menu) => {
+            menu.addEventListener("change", aggiornaTotale);
+        });
+
+        aggiornaTotale();
+
+        document.getElementById("salva-preventivo").addEventListener("click", () => {
+            const datiPreventivo = Array.from(menuComponenti).map((menu) => ({
+                id: menu.id,
+                nome: menu.selectedOptions[0]?.dataset?.nome || menu.selectedOptions[0]?.textContent || "",
+                valore: Number(menu.value) || 0
+            })).filter((componente) => componente.valore > 0);
+
+            const preventivi = JSON.parse(localStorage.getItem("preventivi") || "[]");
+            const totale = Array.from(menuComponenti).reduce((somma, menu) => somma + (Number(menu.value) || 0), 0);
+
+            preventivi.push({
+                titolo: "Preventivo personalizzato",
+                componente: datiPreventivo,
+                prezzo: formattaEuro(totale),
+                data: new Date().toLocaleDateString("it-IT")
+            });
+
+            localStorage.setItem("preventivi", JSON.stringify(preventivi));
+            window.location.href = "preventivi.html";
+        });
+
+        document.getElementById("pdf").addEventListener("click", () => {
+            window.print();
+        });
+    </script>
+
+    <iframe src="footer.html" class="site-footer" title="Piè di pagina"></iframe>
+
+</body>
+</html>
